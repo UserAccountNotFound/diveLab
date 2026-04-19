@@ -1,0 +1,101 @@
+// Держатель зеркала для дайвинга
+// Diving Mirror Holder
+// version 1.5.2
+//
+// OpenSCAD model
+// =============================================
+
+// === ПАРАМЕТРЫ ===
+mirrorSize          = 75;            // диаметр зеркала, мм
+depthMirrorSlot     = 4;             // глубина посадочного места зеркала, мм
+baseWidth           = 77;            // диаметр основания, мм
+bunjeeHoleDia       = 5;             // диаметр отверстий для банджи, мм
+wallThickness       = 4;             // мм — толщина стенки корпуса
+bungeeOffsetX       = 25;            // расстояние от центра (0) до центров цилиндров по оси X, мм
+bungeeHoleOvershoot = 5;             // запас длины цилиндра по оси Y, мм
+
+txtHeight           = 1.5;           // высота выпуклого текста
+txtFont             = "Liberation Mono:style=Bold";
+txtSize             = 5;             // размер шрифта
+txtSpacing          = 10;            // растояние между буквами
+txtStrSec0          = "текст1";
+txtStrSec90         = "текст2";
+txtStrSec180        = "текст3";
+txtStrSec270        = "текст4";
+
+// Расчётные параметры
+innerDiameter = baseWidth - 2 * wallThickness;
+baseLength = (depthMirrorSlot + 2) + (bunjeeHoleDia + 2);
+
+
+// === ОТВЕРСТИЯ ДЛЯ БАНДЖИ (2 цилиндра, параллельны оси Y) ===
+module bungee_holes() {
+    // Длина цилиндра: перекрывает весь диаметр по Y + запас с двух сторон
+    holeLength = baseWidth + 2 * bungeeHoleOvershoot;
+    holeZ = (bunjeeHoleDia/2) + 2; // центрирование по высоте корпуса
+
+    // Цилиндр 1 (положительное направление X)
+    translate([bungeeOffsetX, 0, holeZ])
+        rotate([90, 0, 0]) // поворот из Z в Y
+            cylinder(h=holeLength, d=bunjeeHoleDia, $fn=30, center=true);
+
+    // Цилиндр 2 (отрицательное направление X)
+    translate([-bungeeOffsetX, 0, holeZ])
+        rotate([90, 0, 0])
+            cylinder(h=holeLength, d=bunjeeHoleDia, $fn=30, center=true);
+}
+
+// === ТЕКСТ НА ПОВЕРХНОСТИ ===
+module surface_text(text_str, angle, radius, height_pos, txt_height, size=4, spacing=13, font=txtFont) {
+    length = len(text_str);
+    
+    if (length > 0) {  // Проверка пустой строки
+        // количество интервалов между символами
+        angle_offset = ((length - 1) * spacing) / 2;
+        
+        for(i = [0:1:length-1]) {
+            // Позиция каждого символа относительно центра
+            char_angle = angle + (i * spacing - angle_offset);
+            
+            rotate([0, 0, char_angle]) 
+            translate([radius, 0, height_pos])
+            rotate([90, 0, 90]) 
+            linear_extrude(height=txt_height)
+            text(text_str[i], size=size, font=font, halign="center", valign="center", $fn=20);
+        }
+    }
+}
+
+// === ОСНОВНОЙ МОДУЛЬ ===
+module dive_mirror_holder() {
+    union(){
+        difference() {
+            // Основной корпус
+            cylinder(h=baseLength, d=baseWidth, $fn=360);
+            
+            // Внутренняя полость
+            translate([0, 0, -1])
+                cylinder(h=(bunjeeHoleDia + 3), d=innerDiameter, $fn=360);
+
+            // Посадочное место под зеркало
+            translate([0, 0, (baseLength - depthMirrorSlot)])
+                cylinder(h=(depthMirrorSlot + 1), d=mirrorSize, $fn=360);
+            
+            // Отверстия для банджи
+            bungee_holes();
+        }
+        
+        // Надписи
+        surface_text(txtStrSec0, 0, baseWidth/2 - 1, baseLength/2, txtHeight, txtSize, txtSpacing, txtFont);
+        surface_text(txtStrSec90, 90, baseWidth/2 - 1, baseLength/2, txtHeight, txtSize, txtSpacing, txtFont);
+        surface_text(txtStrSec180, 180, baseWidth/2 - 1, baseLength/2, txtHeight, txtSize, txtSpacing, txtFont);
+        surface_text(txtStrSec270, 270, baseWidth/2 - 1, baseLength/2, txtHeight, txtSize, txtSpacing, txtFont);
+    }
+}
+
+// Сборка
+dive_mirror_holder();
+
+// --- ИНФОРМАЦИЯ О МОДЕЛИ ---
+echo(str("=== Diving Accesories - DiveMirror 75mm (Holder) ==="));
+echo(str("Расчетный диаметр банджи: ", bunjeeHoleDia, " мм"));
