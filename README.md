@@ -1,6 +1,6 @@
-# DiveLab - OpenSCAD Models for Technical Diving
+![Stability](https://img.shields.io/badge/stability-work_in_progress-lightgrey?style=flat&color=ffff00)
 
-# ⚠️ project in development
+# DiveLab - OpenSCAD Models for Technical Diving
 
 [![Visitors](https://hitscounter.dev/api/count/badge.svg?url=https%3A%2F%2Fgithub.com%2FUserAccountNotFound%2FdiveLab&count_bg=%23007BFF&title_bg=%232C3E50&icon=diving.svg&icon_color=%23E7E9EB&title=посещения&edge_flat=false)](https://hitscounter.dev/)
 [![Downloads](https://img.shields.io/github/downloads/UserAccountNotFound/diveLab/total?color=007BFF&label=скачивания&style=for-the-badge)](https://github.com/UserAccountNotFound/diveLab/releases)
