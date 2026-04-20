@@ -1,6 +1,6 @@
 // Держатель зеркала для дайвинга
 // Diving Mirror Holder
-// version 1.5.2
+// version 1.6.0
 //
 // OpenSCAD model
 // =============================================
@@ -23,10 +23,22 @@ txtStrSec90         = "текст2";
 txtStrSec180        = "текст3";
 txtStrSec270        = "текст4";
 
+bottomTxtStr90      = "кто сдох";     // текст на дне 
+bottomTxtStr270     = "тот лох";      // текст на дне
+bottomTxtSize       = 6;              // размер шрифта на дне
+bottomTxtHeight     = 1;              // высота выпуклого текста на дне
+
+// === ПАРАМЕТРЫ ЛОГОТИПА ===
+enable_logo         = false;              // вкл/выкл логотип
+logo_file           = "logo.svg";        // путь к вашему файлу
+logo_scale          = 0.3;               // масштаб (0.5-1.0) default:(1.0 = оригинал из SVG) 
+svg_path      = "./logoND_v3.dxf"; // путь к файлу SVG
+
 // Расчётные параметры
 innerDiameter = baseWidth - 2 * wallThickness;
 baseLength = (depthMirrorSlot + 2) + (bunjeeHoleDia + 2);
-
+bottomTextZ     = bunjeeHoleDia + 2 - bottomTxtHeight;      // высота от низа (мм)
+bottomTextY     = innerDiameter/2-bottomTxtSize;     // расстояние от центра по Y (мм)
 
 // === ОТВЕРСТИЯ ДЛЯ БАНДЖИ (2 цилиндра, параллельны оси Y) ===
 module bungee_holes() {
@@ -66,6 +78,40 @@ module surface_text(text_str, angle, radius, height_pos, txt_height, size=4, spa
     }
 }
 
+// === Текст по дуге ===
+module arc_bottom_text(text_str, start_angle, radius, z_pos, txt_height, txt_size) {
+    chars = [for(i=[0:len(text_str)-1]) text_str[i]];
+    char_angle = txtSpacing / radius * 180 / PI;  // угол на символ (~8°)
+    
+    for(i = [0:len(chars)-1]) {
+        char_angle_pos = start_angle + i * char_angle - (len(chars)-1) * char_angle / 2;
+        
+        rotate([0, 0, char_angle_pos])
+        translate([0, radius, z_pos])
+        mirror([1,0,0])
+        linear_extrude(height=txt_height)
+        text(chars[i], size=txt_size, font=txtFont, 
+             halign="center", valign="center", $fn=30);
+    }
+}
+
+// === Текст на нижней поверхности ===
+module bottom_texts() {
+    rotate([0, 0, 90])
+    arc_bottom_text(bottomTxtStr270, 0, bottomTextY, bottomTextZ, bottomTxtHeight, bottomTxtSize);
+    rotate([0, 0, 90])
+    arc_bottom_text(bottomTxtStr90, 180, bottomTextY, bottomTextZ, bottomTxtHeight, bottomTxtSize);
+}
+
+// === Лого на нижней поверхности ===
+module logo() {
+    translate([0, 0, -logo_height/2])  // выпуклое от низа
+    linear_extrude(height=logo_height, center=true)
+    scale(logo_scale)
+    offset(0.01)  // закрывает микрозазоры SVG [web:61]
+    import(svg_path, center=true);
+}
+
 // === ОСНОВНОЙ МОДУЛЬ ===
 module dive_mirror_holder() {
     union(){
@@ -85,16 +131,27 @@ module dive_mirror_holder() {
             bungee_holes();
         }
         
+        if (enable_logo) {
+            logo();
+        }
+        
         // Надписи
         surface_text(txtStrSec0, 0, baseWidth/2 - 1, baseLength/2, txtHeight, txtSize, txtSpacing, txtFont);
         surface_text(txtStrSec90, 90, baseWidth/2 - 1, baseLength/2, txtHeight, txtSize, txtSpacing, txtFont);
         surface_text(txtStrSec180, 180, baseWidth/2 - 1, baseLength/2, txtHeight, txtSize, txtSpacing, txtFont);
         surface_text(txtStrSec270, 270, baseWidth/2 - 1, baseLength/2, txtHeight, txtSize, txtSpacing, txtFont);
+        
+        bottom_texts();
     }
 }
 
 // Сборка
 dive_mirror_holder();
+
+// Проверка пути к файлу
+if (enable_logo) {
+    echo(str("Логотип: ", svg_path, " | Масштаб: ", logo_scale, "x | Позиция: "));
+}
 
 // --- ИНФОРМАЦИЯ О МОДЕЛИ ---
 echo(str("=== Diving Accesories - DiveMirror 75mm (Holder) ==="));
