@@ -91,4 +91,4 @@ module build_logo () {
 }
 
 // Запуск рендера
-build_logo();
+//build_logo();
