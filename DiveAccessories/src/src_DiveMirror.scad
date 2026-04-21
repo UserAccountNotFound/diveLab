@@ -23,8 +23,8 @@ txtStrSec90         = "текст2";
 txtStrSec180        = "текст3";
 txtStrSec270        = "текст4";
 
-bottomTxtStr90      = "кто сдох";     // текст на дне 
-bottomTxtStr270     = "тот лох";      // текст на дне
+bottomTxtStr90      = "Глубже Дольше";          // текст на дне 
+bottomTxtStr270     = "Техничнее Безопаснее";   // текст на дне
 bottomTxtSize       = 6;              // размер шрифта на дне
 bottomTxtHeight     = 1;              // высота выпуклого текста на дне
 
