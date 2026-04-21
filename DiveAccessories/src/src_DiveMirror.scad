@@ -1,10 +1,10 @@
 // Держатель зеркала для дайвинга
 // Diving Mirror Holder
-// version 1.6.0
+// version 1.6.1
 //
 // OpenSCAD model
 // =============================================
-
+use <../../includes/logoND_small_v.1.0.scad>
 // === ПАРАМЕТРЫ ===
 mirrorSize          = 75;            // диаметр зеркала, мм
 depthMirrorSlot     = 4;             // глубина посадочного места зеркала, мм
@@ -29,10 +29,9 @@ bottomTxtSize       = 6;              // размер шрифта на дне
 bottomTxtHeight     = 1;              // высота выпуклого текста на дне
 
 // === ПАРАМЕТРЫ ЛОГОТИПА ===
-enable_logo         = false;              // вкл/выкл логотип
-logo_file           = "logo.svg";        // путь к вашему файлу
-logo_scale          = 0.3;               // масштаб (0.5-1.0) default:(1.0 = оригинал из SVG) 
-svg_path      = "./logoND_v3.dxf"; // путь к файлу SVG
+enable_logo         = true;              // вкл/выкл логотип
+logo_scale          = 0.5;               // масштаб (0.5-1.0) 
+logo_height         = 1.5;
 
 // Расчётные параметры
 innerDiameter = baseWidth - 2 * wallThickness;
@@ -103,15 +102,6 @@ module bottom_texts() {
     arc_bottom_text(bottomTxtStr90, 180, bottomTextY, bottomTextZ, bottomTxtHeight, bottomTxtSize);
 }
 
-// === Лого на нижней поверхности ===
-module logo() {
-    translate([0, 0, -logo_height/2])  // выпуклое от низа
-    linear_extrude(height=logo_height, center=true)
-    scale(logo_scale)
-    offset(0.01)  // закрывает микрозазоры SVG [web:61]
-    import(svg_path, center=true);
-}
-
 // === ОСНОВНОЙ МОДУЛЬ ===
 module dive_mirror_holder() {
     union(){
@@ -132,7 +122,11 @@ module dive_mirror_holder() {
         }
         
         if (enable_logo) {
-            logo();
+            translate([0, 0, bottomTextZ])
+            rotate([0, 0, 90])
+            mirror([0,1,0])
+            linear_extrude(height=logo_height)
+                scale(logo_scale) build_logo(); 
         }
         
         // Надписи
@@ -147,11 +141,6 @@ module dive_mirror_holder() {
 
 // Сборка
 dive_mirror_holder();
-
-// Проверка пути к файлу
-if (enable_logo) {
-    echo(str("Логотип: ", svg_path, " | Масштаб: ", logo_scale, "x | Позиция: "));
-}
 
 // --- ИНФОРМАЦИЯ О МОДЕЛИ ---
 echo(str("=== Diving Accesories - DiveMirror 75mm (Holder) ==="));
