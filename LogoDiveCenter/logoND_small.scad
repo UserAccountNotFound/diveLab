@@ -1,18 +1,20 @@
 // Малый логотип дайв клуба Neva Divers
-// Version 1.1
+// Version 1.2
 //
 // OpenSCAD model
 // =============================================
 
 // === ПАРАМЕТРЫ ===
 $fn = 100;
-short_font = "Noto Serif:style=Medium";
 
-// Параметры волны
-step = 0.5;      
-length = 70;    
-amplitude = 3;   
-thickness = 1;   
+shortTxtFont    = "Noto Serif:style=Bold";
+txtLogoSize     = 10;
+
+// Волна
+step            = 0.5;      
+length          = 70;    
+amplitude       = 2;   
+thickness       = 1;   
 
 module ellipse(w, k=0.6) {
     scale([w/2, w*k/2]) circle(r=1);
@@ -25,12 +27,13 @@ module oval_ring(w, t, k=0.6) {
     }
 }
 
+// --- ВОЛНА ---
 module wave() {
-    // Смещение для центрирования волны внутри овала 80
+    // Смещение для центрирования волны внутри овала
     translate([-25, -12, 0])
     for (i = [-20 : step : length]) {
-        translate([i, amplitude * cos(i * 5), 0])
-        circle(r = thickness, $fn = 20);
+        translate([i, amplitude * sin(i * 8), 0])
+            circle(r = thickness, $fn = 20);
     }
 }
 
@@ -38,57 +41,58 @@ module wave() {
 module wave_bottom_mask() {
     translate([-25, -12, 0])
     for (i = [-20 : step : length]) {
-        // Рисуем узкие полоски, уходящие вниз
-        translate([i, amplitude * cos(i * 5) - 25, 0])
-        square([step * 1.5, 50], center=true);
+        translate([i, amplitude * sin(i * 8) - 25, 0])
+            square([step * 1.5, 50], center=true);
     }
 }
 
+// --- КОРОТКАЯ ФОРМА (ND) ---
 module txt_short_form () {
-    translate([-4.5, 0, 0]) // Приподнят, чтобы не "тонул" в волне
-    text("N", font = short_font, size = 15, halign = "center", valign = "center");
-    translate([4.5, 0, 0]) // Приподнят, чтобы не "тонул" в волне
-    text("D", font = short_font, size = 15, halign = "center", valign = "center");
+    translate([-4.5, 0, 0])
+        text("N", font = shortTxtFont, size = 14, halign = "center", valign = "center");
+    translate([4.5, 0, 0])
+        text("D", font = shortTxtFont, size = 14, halign = "center", valign = "center");
 }
 
-// --- Сборка ---
+// --- СБОРКА  ---
 module build_logo () {
     union() {
-        // 1. Внутреннее кольцо (рамка 80)
-        oval_ring(80, 2);
+        // 1. Внутренняя рамка
+        oval_ring(66, 2, 0.66);
 
         // 2. Меридианы, обрезанные волной
         difference() {
             intersection() {
-                oval_ring(60, 2, 0.8); // Вертикальный эллипс (меридиан)
-                ellipse(76, 0.6);      // Ограничение внутренним пространством
+                oval_ring(49, 2, 0.87); // Вертикальный эллипс (меридиан)
+                ellipse(63, 0.68);      // Ограничение внутренним пространством
             }
             wave_bottom_mask();        // Удаляем всё, что ниже волны
         }
 
-        // 3. Сама линия волны
+        // 3. Линия волны
         intersection() {
             wave();
-            ellipse(76, 0.6); // Чтобы концы волны не вылезали за рамку
+            ellipse(66, 0.66); // Чтобы концы волны не вылезали за рамку
         }
+
         // 4. Линии
         intersection() { // правая
-            translate([30, 0, 0]) square([25, 2], center=true);
-            ellipse(80, 0.6); // Чтобы концы волны не вылезали за рамку
-        } 
-        intersection() { // левая
-            translate([-30, 0, 0]) square([25, 2], center=true);
-            ellipse(80, 0.6); // Чтобы концы волны не вылезали за рамку
+            translate([25, 0, 0]) square([20, 2], center=true);
+            ellipse(66, 0.6);
         }
-        intersection() { //вертикальная
-            translate([0, 20, 0]) square([2, 10], center=true);
-            ellipse(80, 0.6); // Чтобы концы волны не вылезали за рамку
-        }     
-        
-        // 6. Текст
+        intersection() { // левая
+            translate([-25, 0, 0]) square([20, 2], center=true);
+            ellipse(66, 0.6);
+        }
+        intersection() { // вертикальная
+            translate([0, 16, 0]) square([2, 10], center=true);
+            ellipse(66, 0.6);
+        }
+
+        // 5. Текст
         txt_short_form();
     }
 }
 
-// Запуск рендера
-//build_logo();
+// Рендер
+build_logo();

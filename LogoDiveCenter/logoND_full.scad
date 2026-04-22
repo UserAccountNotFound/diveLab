@@ -1,5 +1,5 @@
 // Логотип дайв клуба Neva Divers
-// Version 1.1
+// Version 2.0
 //
 // OpenSCAD model
 // ---------------------------------------------
@@ -9,8 +9,18 @@ $fn = 100;
 
 shortTxtFont    = "Noto Serif:style=Bold";
 longTxtFont     = "Noto Sans:style=ExtraCondensed Bold";
-txtLogoSize     = 10;
-//txtSpacing      = 4;  // расстояние между буквами
+
+txtUpperSpacing = 6;            // растояние между буквами
+txtUpperSize    = 9;
+txtUpperOffset  = -25;
+txtUpperRadius  = 54;
+
+txtLowerSpacing = 4.2;            
+txtLowerSize    = 6;
+txtLowerOffset  = 18;
+txtLowerRadius  = 48;
+
+//txt_rotate      =false;
 
 // Волна
 step            = 0.5;      
@@ -56,76 +66,35 @@ module txt_short_form () {
         text("D", font = shortTxtFont, size = 14, halign = "center", valign = "center");
 }
 
-// --- ТЕКСТ ПО ЭЛЛИПТИЧЕСКОЙ ДУГЕ ---
-module arc_text_ellipse(text_str, start_angle, end_angle, rx, ry, txt_size,
-                        font=shortTxtFont, flip=false, txtSpacing=1) {
-
-    chars = [for (i = [0 : len(text_str)-1]) text_str[i]];
-    n = len(chars);
-
-    // Базовый шаг по углу
-    base_step = n > 1 ? (end_angle - start_angle) / (n - 1) : 0;
-
-    // Поправка на желаемый интервал
-    step = base_step * txtSpacing;
-
-    // Центрируем строку, чтобы её не "уводило" при изменении spacing
-    total_span = step * (n - 1);
-    offset = (end_angle - start_angle - total_span) / 2;
-
-    for (i = [0 : n-1]) {
-        a_deg = start_angle + offset + i * step;
-
-        x = rx * cos(a_deg);
-        y = ry * sin(a_deg);
-
-        dx = -rx * sin(a_deg);
-        dy =  ry * cos(a_deg);
-
-        tangent = atan2(dy, dx);
-        normal = tangent + (flip ? 0 : 180);
-
-        translate([x, y, 0])
-            rotate(normal)
-                text(chars[i], size=txt_size, font=font,
-                     halign="center", valign="center", $fn=30);
+// === Текст по дуге ===
+module arc_bottom_text(text_str, start_angle, txt_radius, txt_size, txt_spacing, txt_rotate) {
+    chars = [for(i=[0:len(text_str)-1]) text_str[i]];
+    
+    char_angle = txt_spacing / txt_radius * 180 / PI;  // угол на символ 
+    
+    if (txt_rotate) {
+        for(i = [0:len(chars)-1]) {
+            char_angle_pos = start_angle + i * char_angle - (len(chars)-1) * char_angle / 2;
+        rotate([0, 0, char_angle_pos])
+        translate([0, txt_radius, 0])
+        rotate([180, 0, 0])  // Дополнительный поворот на 180° по X
+        mirror([1,0,0])
+        text(chars[i], size=txt_size, font=longTxtFont, 
+            halign="center", valign="center", $fn=30);
+        }
+     } else { 
+        for(i = [0:len(chars)-1]) {
+            char_angle_pos = start_angle + i * char_angle - (len(chars)-1) * char_angle / 2;
+        rotate([0, 0, -char_angle_pos + start_angle])
+        translate([0, txt_radius, 0])
+        text(chars[i], size=txt_size, font=longTxtFont, 
+            halign="center", valign="center", $fn=30);
+        }
     }
 }
 
-module txt_upper_ellipse() {
-    // Эллипс текстовой дуги (по форме внешнего эллипса)
-    innerOval       = 100;          // общая ширина эллипса
-    innerOvalK      = 0.67;          // отношение высоты/ширины (0.6)
-    
-    // радиусы эллипса, на котором лежит текст
-    rx = innerOval / 2;              // 55
-    ry = innerOval * innerOvalK / 2; // 33
 
-    // Уменьшаем высоту, чтобы текст не лез наружу
-    rx_txt = rx - txtLogoSize/2;
-    ry_txt = ry - txtLogoSize/2;
-    
-    // текст по верхней дуге эллипса: от 140 до 40 градусов
-    arc_text_ellipse("NEVA DIVERS", 130, 50, rx_txt, ry_txt, 8, longTxtFont, false, 0.9);
-}
-
-module txt_lower_ellipse() {
-    innerOval_bottom = 98;
-    innerOvalK_bottom = 0.695;
-    
-    rx = innerOval_bottom / 2;
-    ry = innerOval_bottom * innerOvalK_bottom / 2;
-
-    // нижняя дуга, чуть больше
-    rx_txt = rx - txtLogoSize/2;
-    ry_txt = ry - txtLogoSize/2;
-
-    arc_text_ellipse("ADVANCED", 195, 245, rx_txt, ry_txt, 6.5, longTxtFont, true, 1.03);
-    arc_text_ellipse("TRAINING", 256, 294, rx_txt, ry_txt, 6.5, longTxtFont, true, 1.03);
-    arc_text_ellipse("FACILITY", 304, 342, rx_txt, ry_txt, 6.5, longTxtFont, true, 1.03);
-}
-
-// --- СБОРКА ЛОГОТИПА ---
+// --- СБОРКА  ---
 module build_logo () {
     union() {
         // 1. Внутренняя рамка
@@ -162,8 +131,12 @@ module build_logo () {
 
         // 5. Текст
         txt_short_form();
-        txt_upper_ellipse();
-        txt_lower_ellipse();
+
+        translate([0, txtUpperOffset, 0])
+        arc_bottom_text("NEVA DIVERS", 0, txtUpperRadius, txtUpperSize, txtUpperSpacing, false);
+        
+        translate([0, txtLowerOffset, 0])
+        arc_bottom_text("ADVANCED TRAINING FACILITY", 180, txtLowerRadius, txtLowerSize, txtLowerSpacing, true);
         
         // 6. Точки
         translate([-40, 8])circle (2.6);
