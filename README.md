@@ -1,6 +1,6 @@
 ![Stability](https://img.shields.io/badge/stability-work_in_progress-lightgrey?style=flat&color=ffff00)
 
-# DiveLab - OpenSCAD Models for Technical Diving
+# DiveLab Neva Divers - OpenSCAD Models for Technical Diving
 
 ![Visitors](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FUserAccountNotFound%2FdiveLab&label=Visitors&icon=github&color=%23198754&message=&style=flat&tz=UTC)
 [![Downloads](https://img.shields.io/github/downloads/UserAccountNotFound/diveLab/total?color=007BFF&label=скачивания&style=for-the-badge)](https://github.com/UserAccountNotFound/diveLab/releases)
