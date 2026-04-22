@@ -17,8 +17,8 @@ txtUpperRadius  = 54;
 
 txtLowerSpacing = 4.2;            
 txtLowerSize    = 6;
-txtLowerOffset  = 18;
-txtLowerRadius  = 48;
+txtLowerOffset  = 23;
+txtLowerRadius  = 53;
 
 //txt_rotate      =false;
 
