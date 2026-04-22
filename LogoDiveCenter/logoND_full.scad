@@ -10,7 +10,7 @@ $fn = 100;
 shortTxtFont    = "Noto Serif:style=Bold";
 longTxtFont     = "Noto Sans:style=ExtraCondensed Bold";
 txtLogoSize     = 10;
-//txtLogoSpacing  = 10;  // расстояние между буквами
+//txtSpacing      = 4;  // расстояние между буквами
 
 // Волна
 step            = 0.5;      
@@ -57,23 +57,31 @@ module txt_short_form () {
 }
 
 // --- ТЕКСТ ПО ЭЛЛИПТИЧЕСКОЙ ДУГЕ ---
-module arc_text_ellipse(text_str, start_angle, end_angle, rx, ry, txt_size, font=shortTxtFont, flip=false) {
+module arc_text_ellipse(text_str, start_angle, end_angle, rx, ry, txt_size,
+                        font=shortTxtFont, flip=false, txtSpacing=1) {
 
-    chars = [for(i=[0:len(text_str)-1]) text_str[i]];
+    chars = [for (i = [0 : len(text_str)-1]) text_str[i]];
     n = len(chars);
 
-    delta_angle = end_angle - start_angle;
-    angle_step = n > 1 ? delta_angle / (n - 1) : 0;
+    // Базовый шаг по углу
+    base_step = n > 1 ? (end_angle - start_angle) / (n - 1) : 0;
 
-    for(i = [0:n-1]) {
-        a_deg = start_angle + i * angle_step;
+    // Поправка на желаемый интервал
+    step = base_step * txtSpacing;
+
+    // Центрируем строку, чтобы её не "уводило" при изменении spacing
+    total_span = step * (n - 1);
+    offset = (end_angle - start_angle - total_span) / 2;
+
+    for (i = [0 : n-1]) {
+        a_deg = start_angle + offset + i * step;
 
         x = rx * cos(a_deg);
         y = ry * sin(a_deg);
 
         dx = -rx * sin(a_deg);
         dy =  ry * cos(a_deg);
-        
+
         tangent = atan2(dy, dx);
         normal = tangent + (flip ? 0 : 180);
 
@@ -98,7 +106,7 @@ module txt_upper_ellipse() {
     ry_txt = ry - txtLogoSize/2;
     
     // текст по верхней дуге эллипса: от 140 до 40 градусов
-    arc_text_ellipse("NEVA DIVERS", 130, 50, rx_txt, ry_txt, 8, longTxtFont, false);
+    arc_text_ellipse("NEVA DIVERS", 130, 50, rx_txt, ry_txt, 8, longTxtFont, false, 0.9);
 }
 
 module txt_lower_ellipse() {
@@ -112,9 +120,9 @@ module txt_lower_ellipse() {
     rx_txt = rx - txtLogoSize/2;
     ry_txt = ry - txtLogoSize/2;
 
-    arc_text_ellipse("ADVANCED", 195, 250, rx_txt, ry_txt, 6.5, longTxtFont, true);
-    arc_text_ellipse("TRAINING", 256, 294, rx_txt, ry_txt, 6.5, longTxtFont, true);
-    arc_text_ellipse("FACILITY", 304, 342, rx_txt, ry_txt, 6.5, longTxtFont, true);
+    arc_text_ellipse("ADVANCED", 195, 245, rx_txt, ry_txt, 6.5, longTxtFont, true, 1.03);
+    arc_text_ellipse("TRAINING", 256, 294, rx_txt, ry_txt, 6.5, longTxtFont, true, 1.03);
+    arc_text_ellipse("FACILITY", 304, 342, rx_txt, ry_txt, 6.5, longTxtFont, true, 1.03);
 }
 
 // --- СБОРКА ЛОГОТИПА ---
