@@ -1,8 +1,8 @@
-<a href="https://www.neva-divers.ru/">
-    <img src="https://github.com/UserAccountNotFound/diveLab/blob/main/LogoDiveCenter/render/logoND_full_transparent.svg" alt="Neva Divers Logo" title="Neva Divers" align="right" height="60" />
-</a>
-
 ![Stability](https://img.shields.io/badge/stability-work_in_progress-lightgrey?style=flat&color=ffff00)
+
+<a href="https://www.neva-divers.ru/">
+    <img src="https://github.com/UserAccountNotFound/diveLab/blob/main/LogoDiveCenter/render/logoND_full_transparent.svg" alt="Neva Divers Logo" title="Neva Divers" align="right" height="100" />
+</a>
 
 # DiveLab Neva Divers - OpenSCAD Models for Technical Diving
 
