@@ -2,7 +2,7 @@
 
 # DiveLab - OpenSCAD Models for Technical Diving
 
-[![Visitors](https://hitscounter.dev/api/count/badge.svg?url=https%3A%2F%2Fgithub.com%2FUserAccountNotFound%2FdiveLab&count_bg=%23007BFF&title_bg=%232C3E50&icon=diving.svg&icon_color=%23E7E9EB&title=посещения&edge_flat=false)](https://hitscounter.dev/)
+![Visitors](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FUserAccountNotFound%2FdiveLab&label=Visitors&icon=github&color=%23198754&message=&style=flat&tz=UTC)
 [![Downloads](https://img.shields.io/github/downloads/UserAccountNotFound/diveLab/total?color=007BFF&label=скачивания&style=for-the-badge)](https://github.com/UserAccountNotFound/diveLab/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![OpenSCAD](https://img.shields.io/badge/OpenSCAD-007BFF?style=for-the-badge&logo=openscad&logoColor=white)](https://openscad.org/)
