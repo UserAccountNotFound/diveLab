@@ -1,9 +1,10 @@
 // Указатель направления для пещерного дайвинга
 // Cave Diving Marker - Arrow (Direction)
-// vеrsion 1.4.6
+// vеrsion 1.5.0
 //
 // OpenSCAD model
 // =============================================
+use <../../LogoDiveCenter/logoND_small.scad>
 
 // === ПАРАМЕТРЫ ===
 baseWidth            = 50;     // ширина основания, мм
@@ -22,10 +23,13 @@ cutoutOffsetFromBase = 16;     // отступ нижнего выреза от 
 legHoleAngleOffset   = 0;      // доп. поворот относительно перпендикуляра, в градусах
 diagonalAngle        = 30;     // угол от первого отверстия, градусах
 
+enable_logo          = true;              // вкл/выкл логотип
+logo_scale           = 0.2;               // масштаб (0.5-1.0) 
+
 txtHeight            = 3;      // высота выпуклого текста
 txtFonts             = "Free Schoolbook:style=Bold";
-txt_DiveCenter       = "Neva Divers";
-txt_Name             = "Повар";         
+txtStr1              = "Текст1";
+txtStr2              = "Текст2";         
 
 
 // === ПРОВЕРКИ ===
@@ -182,14 +186,22 @@ module cave_marker() {
         }
 
         y_pos_txt_1 = cutoutOffsetFromBase + (cutoutSpacing * 0.4); // центр первого первого текстового поля
-        
+        // наносим лого 
+        if (enable_logo) {
+            translate([(baseWidth / 2), (baseLength-(cutoutOffsetFromBase+cutoutSpacing))*1.3])
+            //translate([(baseWidth / 2), (baseLength - y_pos_txt_1)])
+                //rotate([0, 0, 90])
+                    //mirror([0,1,0])
+                        linear_extrude(height=txtHeight)
+                            scale(logo_scale) build_logo(); 
+        }        
         // наносим надписи        
         linear_extrude(height = txtHeight) {
             translate([(baseWidth / 2), y_pos_txt_1]) 
                 rotate ([0, 0, diagonalAngle])
-                    text(txt_DiveCenter, size=3, font=txtFonts, halign = "center", $fn=30);
+                    text(txtStr1, size=3, font=txtFonts, halign = "center", $fn=30);
             translate([(baseWidth / 2), 6]) 
-                text(txt_Name, size=5, font=txtFonts, halign = "center", $fn=30);
+                text(txtStr2, size=5, font=txtFonts, halign = "center", $fn=30);
         }
     }
 }

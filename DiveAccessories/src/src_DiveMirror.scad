@@ -1,6 +1,6 @@
 // Держатель зеркала для дайвинга
 // Diving Mirror Holder
-// version 1.6.3
+// version 1.6.4
 //
 // OpenSCAD model
 // =============================================
@@ -28,7 +28,6 @@ bottomTxtStr270     = " ";      // текст на дне
 bottomTxtSize       = 5;              // размер шрифта на дне
 bottomTxtHeight     = 1;              // высота выпуклого текста на дне
 
-// === ПАРАМЕТРЫ ЛОГОТИПА ===
 enable_logo         = true;              // вкл/выкл логотип
 logo_scale          = 0.5;               // масштаб (0.5-1.0) 
 
@@ -55,7 +54,7 @@ module bungee_holes() {
             cylinder(h=holeLength, d=bunjeeHoleDia, $fn=30, center=true);
 }
 
-// === ТЕКСТ НА ПОВЕРХНОСТИ ===
+// === Текст на поверхности ===
 module surface_text(text_str, angle, radius, height_pos, txt_height, size=4, spacing=13, font=txtFont) {
     length = len(text_str);
     
@@ -101,7 +100,7 @@ module bottom_texts() {
     arc_bottom_text(bottomTxtStr90, 180, bottomTextY, bottomTextZ, bottomTxtHeight, bottomTxtSize);
 }
 
-// === ОСНОВНОЙ МОДУЛЬ ===
+// === Модель ===
 module dive_mirror_holder() {
     union(){
         difference() {
