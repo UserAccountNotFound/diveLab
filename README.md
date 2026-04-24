@@ -2,7 +2,7 @@
 <div align="left">
   <a href="README.en.md">English</a> | Русский
 </div>
-
+<br>
 
 <a href="https://www.neva-divers.ru/">
     <img src="https://github.com/UserAccountNotFound/diveLab/blob/main/LogoDiveCenter/render/logoND_full_transparent.svg" alt="Neva Divers Logo" title="Neva Divers" align="right" height="120" />
