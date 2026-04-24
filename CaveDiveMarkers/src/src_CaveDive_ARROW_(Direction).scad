@@ -26,8 +26,8 @@ diagonalAngle        = 30;          // угол от первого отверс
 enable_logo          = true;        // вкл/выкл логотип
 logo_scale           = 0.27;        // масштаб (0.5-1.0) 
 
-txtHeight            = 3;           // высота выпуклого текста
-txtFonts             = "Free Schoolbook:style=Bold";
+txtHeight            = 0.6;           // высота выпуклого текста
+txtFonts             = "Noto Sans:style=Bold";
 txtStr1              = "Текст1";
 txtStr2              = "Текст2";         
 txtStr3              = "Текст3";
@@ -190,26 +190,28 @@ module cave_marker() {
         color ("blue")
         // наносим лого 
         if (enable_logo) {
-            translate([(baseWidth/4)*3, baseLength*0.1])
+            translate([(baseWidth/4)*3, baseLength*0.1, thickness/2])
                 //rotate([0, 0, 90])
                     //mirror([0,1,0])
-                        linear_extrude(height=txtHeight)
+                        linear_extrude(height=txtHeight, convexity=3)
                             scale(logo_scale) build_logo(); 
         }        
         // наносим надписи 
-        color ("magenta")       
-        linear_extrude(height = txtHeight) {
-            translate([baseWidth/2, y_pos_txt_1]) 
-                rotate ([0, 0, diagonalAngle])
-                text(txtStr1, size=3, font=txtFonts, halign = "center", $fn=30);
-            
+        color ("magenta")
+        translate([0, 0, thickness/2])
+        linear_extrude(height = txtHeight, convexity=3) {
+
             translate([(baseWidth/8), 6]) 
-                text(txtStr2, size=3, font=txtFonts, halign = "left", $fn=30);
+                text(txtStr1, size=3, font=txtFonts, halign = "left", $fn=30);
             
-            txt_angle  = atan2(baseLength, baseWidth/2);          
+            txt_angle  = atan2(baseLength, baseWidth/2);
             translate([(baseWidth/20)*9, (baseLength/20)*13.5])
                 rotate (txt_angle)
-                text(txtStr3, size=3, font=txtFonts, halign = "right", $fn=30);
+                text(txtStr2, size=3, font=txtFonts, halign = "right", $fn=30);            
+            
+            translate([baseWidth/2, y_pos_txt_1]) 
+                rotate ([0, 0, diagonalAngle])
+                text(txtStr3, size=3, font=txtFonts, halign = "center", $fn=30);
         }
     }
 }

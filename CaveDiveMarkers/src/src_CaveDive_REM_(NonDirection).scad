@@ -1,35 +1,39 @@
 // Указатель направления для пещерного дайвинга
 // Cave Diving Marker - REM (Non Direction)
-// vеrsion 1.2
+// vеrsion 1.3.0
 //
 // OpenSCAD model
 // =============================================
 
+use <../../LogoDiveCenter/logoND_small.scad>
 
 // === ПАРАМЕТРЫ ===
-baseWidth            = 50;     // ширина основания, мм
-baseLength           = 80;     // высота, мм
-thickness            = 4;      // толщина, мм
-ovalHoles_enabled    = true;   // тип углублений для ходового линя (по умолчанию овальный)
-legHoles_enabled     = true;   // включить/отключить боковые вырезы для линя
-cornerRadius         = 2.0;    // радиус скругления углов, мм
-edgeRadius           = 0.6;    // радиус 3D‑фаски рёбер, мм
+baseWidth            = 50;          // ширина основания, мм
+baseLength           = 80;          // высота, мм
+thickness            = 4;           // толщина, мм
+ovalHoles_enabled    = true;        // тип углублений для ходового линя (по умолчанию овальный)
+legHoles_enabled     = true;        // включить/отключить боковые вырезы для линя
+cornerRadius         = 2.0;         // радиус скругления углов, мм
+edgeRadius           = 0.6;         // радиус 3D‑фаски рёбер, мм
 
-cutoutRadius         = 2.0;    // радиус круглых вырезов и углублений, мм
-cutoutSpacing        = 25;     // расстояние между центрами вертикальных слотов, мм
-cutoutSlotLength     = 6.0;    // длина прорези (слота), мм
-cutoutOffsetFromBase = 35;     // отступ нижнего выреза от основания, мм
+cutoutRadius         = 2.0;         // радиус круглых вырезов и углублений, мм
+cutoutSpacing        = 25;          // расстояние между центрами вертикальных слотов, мм
+cutoutSlotLength     = 6.0;         // длина прорези (слота), мм
+cutoutOffsetFromBase = 35;          // отступ нижнего выреза от основания, мм
 
-legHoleAngleOffset   = 0;      // доп. поворот относительно перпендикуляра, в градусах (не трогать)
-legHole_y1           = 32;     // Y для левого бокового отверстия
-legHole_y2           = 63;     // Y для правого бокового отверстия
-diagonalAngle        = 25;     // угол прорезей от первого отверстия, в градусах
+legHoleAngleOffset   = 0;           // доп. поворот относительно перпендикуляра, в градусах (не трогать)
+legHole_y1           = 32;          // Y для левого бокового отверстия
+legHole_y2           = 63;          // Y для правого бокового отверстия
+diagonalAngle        = 25;          // угол прорезей от первого отверстия, в градусах
 
-txtHeight            = 3;      // высота выпуклого текста
-txtFonts             = "Free Schoolbook:style=Bold";
-txt_DiveCenter       = "Neva Divers";
-txt_Name             = "Повар";         
+enable_logo          = true;        // вкл/выкл логотип
+logo_scale           = 0.27;        // масштаб (0.5-1.0) 
 
+txtHeight            = 0.6;           // высота выпуклого текста
+txtFonts             = "Noto Sans:style=Bold";
+txtStr1              = "Текст1";
+txtStr2              = "Текст2";         
+txtStr3              = "Текст3";
 
 // === ПРОВЕРКИ ===
 assert(thickness >= 2*edgeRadius, "thickness слишком маленькое значение для edgeRadius");
@@ -160,14 +164,24 @@ module cave_marker() {
 
 
         y_pos_txt_1 = cutoutOffsetFromBase + (cutoutSpacing * 0.4); // центр первого первого текстового поля
+
+        color ("blue")
+        // наносим лого 
+        if (enable_logo) {
+            translate([(baseWidth/4), baseLength*0.87, thickness/2])
+                linear_extrude(height=txtHeight, convexity=3)
+                    scale(logo_scale) build_logo(); 
+        } 
         
-        // наносим надписи        
+        // наносим надписи
+        color ("magenta")
+        translate([0, 0, thickness/2])       
         linear_extrude(height = txtHeight) {
             translate([(baseWidth / 2), y_pos_txt_1]) 
                 rotate ([0, 0, diagonalAngle])
-                    text(txt_DiveCenter, size=5, font=txtFonts, halign = "center", $fn=30);
+                    text(txtStr3, size=5, font=txtFonts, halign = "center", $fn=30);
             translate([(baseWidth / 2), 16]) 
-                text(txt_Name, size=5, font=txtFonts, halign = "center", $fn=30);
+                text(txtStr1, size=5, font=txtFonts, halign = "center", $fn=30);
         }
     }
 }
