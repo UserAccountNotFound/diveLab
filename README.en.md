@@ -1,5 +1,5 @@
 <!-- README.en.md (EN) -->
-<div align="right">
+<div align="left">
   <a href="README.md">Русский</a> | English
 </div>
 
