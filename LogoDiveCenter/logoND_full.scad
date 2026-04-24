@@ -66,7 +66,7 @@ module txt_short_form () {
         text("D", font = shortTxtFont, size = 14, halign = "center", valign = "center");
 }
 
-// === Текст по дуге ===
+// --- Текст по дуге ---
 module arc_bottom_text(text_str, start_angle, txt_radius, txt_size, txt_spacing, txt_rotate) {
     chars = [for(i=[0:len(text_str)-1]) text_str[i]];
     
