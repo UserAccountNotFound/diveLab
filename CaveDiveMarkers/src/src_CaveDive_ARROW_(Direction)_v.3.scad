@@ -7,26 +7,26 @@
 use <../../LogoDiveCenter/logoND_small.scad>
 
 // === ПАРАМЕТРЫ ===
-baseWidth            = 50;          // ширина основания, мм
-baseLength           = 80;          // высота, мм
-thickness            = 4;           // толщина, мм
-ovalHoles_enabled    = true;        // тип углублений для ходового линя (по умолчанию овальный)
-legHoles_enabled     = true;        // включить/отключить боковые вырезы для линя
-cornerRadius         = 2.0;         // радиус скругления углов, мм
-edgeRadius           = 0.6;         // радиус 3D‑фаски рёбер, мм
+baseWidth            = 50;     // ширина основания, мм
+baseLength           = 80;     // высота, мм
+thickness            = 4;      // толщина, мм
+ovalHoles_enabled    = true;   // тип углублений для ходового линя (по умолчанию овальный)
+legHoles_enabled     = true;   // включить/отключить боковые вырезы для линя
+cornerRadius         = 2.0;    // радиус скругления углов, мм
+edgeRadius           = 0.6;    // радиус 3D‑фаски рёбер, мм
 
-cutoutRadius         = 2.0;         // радиус круглых вырезов и углублений, мм
-cutoutSpacing        = 24;          // расстояние между центрами вертикальных слотов, мм
-cutoutSlotLength     = 6.0;         // длина прорези (слота), мм
-cutoutOffsetFromBase = 16;          // отступ нижнего выреза от основания, мм
+cutoutRadius         = 2.0;    // радиус круглых вырезов и углублений, мм
+cutoutSpacing        = 24;     // расстояние между центрами вертикальных слотов, мм
+cutoutSlotLength     = 6.0;    // длина прорези (слота), мм
+cutoutOffsetFromBase = 16;     // отступ нижнего выреза от основания, мм
 
-legHoleAngleOffset   = 0;           // доп. поворот относительно перпендикуляра, в градусах
-diagonalAngle        = 30;          // угол от первого отверстия, градусах
+legHoleAngleOffset   = 0;      // доп. поворот относительно перпендикуляра, в градусах
+diagonalAngle        = 30;     // угол от первого отверстия, градусах
 
-enable_logo          = true;        // вкл/выкл логотип
-logo_scale           = 0.27;        // масштаб (0.5-1.0) 
+enable_logo          = true;              // вкл/выкл логотип
+logo_scale           = 0.2;               // масштаб (0.5-1.0) 
 
-txtHeight            = 3;           // высота выпуклого текста
+txtHeight            = 3;      // высота выпуклого текста
 txtFonts             = "Free Schoolbook:style=Bold";
 txtStr1              = "Текст1";
 txtStr2              = "Текст2";         

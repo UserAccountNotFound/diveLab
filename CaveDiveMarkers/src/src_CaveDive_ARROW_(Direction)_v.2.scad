@@ -7,26 +7,26 @@
 use <../../LogoDiveCenter/logoND_small.scad>
 
 // === ПАРАМЕТРЫ ===
-baseWidth            = 50;          // ширина основания, мм
-baseLength           = 80;          // высота, мм
-thickness            = 4;           // толщина, мм
-ovalHoles_enabled    = true;        // тип углублений для ходового линя (по умолчанию овальный)
-legHoles_enabled     = true;        // включить/отключить боковые вырезы для линя
-cornerRadius         = 2.0;         // радиус скругления углов, мм
-edgeRadius           = 0.6;         // радиус 3D‑фаски рёбер, мм
+baseWidth            = 50;     // ширина основания, мм
+baseLength           = 80;     // высота, мм
+thickness            = 4;      // толщина, мм
+ovalHoles_enabled    = true;   // тип углублений для ходового линя (по умолчанию овальный)
+legHoles_enabled     = true;   // включить/отключить боковые вырезы для линя
+cornerRadius         = 2.0;    // радиус скругления углов, мм
+edgeRadius           = 0.6;    // радиус 3D‑фаски рёбер, мм
 
-cutoutRadius         = 2.0;         // радиус круглых вырезов и углублений, мм
-cutoutSpacing        = 24;          // расстояние между центрами вертикальных слотов, мм
-cutoutSlotLength     = 6.0;         // длина прорези (слота), мм
-cutoutOffsetFromBase = 16;          // отступ нижнего выреза от основания, мм
+cutoutRadius         = 2.0;    // радиус круглых вырезов и углублений, мм
+cutoutSpacing        = 24;     // расстояние между центрами вертикальных слотов, мм
+cutoutSlotLength     = 6.0;    // длина прорези (слота), мм
+cutoutOffsetFromBase = 16;     // отступ нижнего выреза от основания, мм
 
-legHoleAngleOffset   = 0;           // доп. поворот относительно перпендикуляра, в градусах
-diagonalAngle        = 30;          // угол от первого отверстия, градусах
+legHoleAngleOffset   = 0;      // доп. поворот относительно перпендикуляра, в градусах
+diagonalAngle        = 30;     // угол от первого отверстия, градусах
 
-enable_logo          = true;        // вкл/выкл логотип
-logo_scale           = 0.27;        // масштаб (0.5-1.0) 
+enable_logo          = true;              // вкл/выкл логотип
+logo_scale           = 0.27;               // масштаб (0.5-1.0) 
 
-txtHeight            = 3;           // высота выпуклого текста
+txtHeight            = 3;      // высота выпуклого текста
 txtFonts             = "Free Schoolbook:style=Bold";
 txtStr1              = "Текст1";
 txtStr2              = "Текст2";         
@@ -190,8 +190,9 @@ module cave_marker() {
         color ("blue")
         // наносим лого 
         if (enable_logo) {
-            translate([(baseWidth/4)*3, baseLength*0.1])
-                //rotate([0, 0, 90])
+            translate([(baseWidth*0.28), baseLength*0.12])
+            //translate([(baseWidth / 2), (baseLength - y_pos_txt_1)])
+                rotate([0, 0, 90])
                     //mirror([0,1,0])
                         linear_extrude(height=txtHeight)
                             scale(logo_scale) build_logo(); 
@@ -201,9 +202,9 @@ module cave_marker() {
         linear_extrude(height = txtHeight) {
             translate([baseWidth/2, y_pos_txt_1]) 
                 rotate ([0, 0, diagonalAngle])
-                text(txtStr1, size=3, font=txtFonts, halign = "center", $fn=30);
+                    text(txtStr1, size=3, font=txtFonts, halign = "center", $fn=30);
             
-            translate([(baseWidth/8), 6]) 
+            translate([(baseWidth/2)*1.1, 6]) 
                 text(txtStr2, size=3, font=txtFonts, halign = "left", $fn=30);
             
             txt_angle  = atan2(baseLength, baseWidth/2);          
