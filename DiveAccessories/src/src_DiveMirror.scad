@@ -17,7 +17,7 @@ bungeeOffsetX       = 25;            // расстояние от центра (
 bungeeHoleOvershoot = 5;              // запас длины цилиндра по оси Y, мм
 
 txtHeight           = 0.6;            // высота выпуклого текста
-txtFont             = "Noto Sans:style=Bold";
+txtFont             = "Xanmono:style=Regular";
 txtSize             = 5;              // размер шрифта
 txtSpacing          = 4.3;            // растояние между буквами
 txtStrSec0          = "текст1";
@@ -25,11 +25,11 @@ txtStrSec90         = "текст2";
 txtStrSec180        = "текст3";
 txtStrSec270        = "текст4";
 
-bottomTxtStr90      = "* ТРУДНО БЫТЬ ГЛУБЖЕ НАС *"; 
-bottomTxtStr270     = "КАПИТАН";      // текст на дне
+bottomTxtStr90      = "ТРУДНО БЫТЬ ГЛУБЖЕ НАС"; 
+bottomTxtStr270     = "*";      // текст на дне
 bottomTxtSize       = 5;              // размер шрифта на дне
 bottomTxtHeight     = 0.6;            // высота выпуклого текста на дне
-bottomTxtSpacing    = 4.3;
+bottomTxtSpacing    = 7;
 
 enable_logo         = true;           // вкл/выкл логотип
 logo_scale          = 0.5;            // масштаб (0.5-1.0) 
@@ -38,7 +38,7 @@ logo_scale          = 0.5;            // масштаб (0.5-1.0)
 innerDiameter = baseWidth - 2 * wallThickness;
 baseLength = (depthMirrorSlot + 2) + (bunjeeHoleDia + 2);
 bottomTextZ     = bunjeeHoleDia + 2 - bottomTxtHeight;      // высота от низа (мм)
-bottomTextY     = innerDiameter/2-bottomTxtSize;     // расстояние от центра по Y (мм)
+bottomTextY     = innerDiameter/2-bottomTxtSize*1.1;     // расстояние от центра по Y (мм)
 
 // --- ОТВЕРСТИЯ ДЛЯ БАНДЖИ (2 цилиндра, параллельны оси Y) ---
 module bungee_holes() {
@@ -144,7 +144,7 @@ module dive_mirror_holder() {
         
         arc_bottom_text(bottomTxtStr90, 0, bottomTextY, bottomTextZ, bottomTxtHeight, bottomTxtSize, bottomTxtSpacing, false);
 
-        arc_bottom_text(bottomTxtStr270, 180, bottomTextY, bottomTextZ, bottomTxtHeight, bottomTxtSize, txtSpacing, true);
+        arc_bottom_text(bottomTxtStr270, 180, bottomTextY, bottomTextZ, bottomTxtHeight, bottomTxtSize, bottomTxtSpacing, true);
     }
 }
 
