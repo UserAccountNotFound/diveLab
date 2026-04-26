@@ -5,7 +5,7 @@
 // OpenSCAD model
 // =============================================
 
-use <../../LogoDiveCenter/logoND_small.scad>
+use <../../NevaDiversLogo/logoND_small.scad>
 
 // === ПАРАМЕТРЫ ===
 baseSize             = 60;     // диаметр основания, мм

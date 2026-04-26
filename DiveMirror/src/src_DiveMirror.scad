@@ -5,7 +5,7 @@
 // OpenSCAD model
 // =============================================
 
-use <../../LogoDiveCenter/logoND_small.scad>
+use <../../NevaDiversLogo/logoND_small.scad>
 
 // === ПАРАМЕТРЫ ===
 mirrorSize          = 75;            // диаметр зеркала, мм
