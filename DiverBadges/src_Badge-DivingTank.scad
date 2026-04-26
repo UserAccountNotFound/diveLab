@@ -1,6 +1,6 @@
 // Именной Бейдж для дайв оборудования
 // Badge - Diving Tank
-// vеrsion 1.0.0
+// vеrsion 1.1.0
 //
 // OpenSCAD model
 // =============================================
@@ -53,7 +53,7 @@ module body_frame() {
     }
 }
 
-module valve(){
+module flat_valve(){
     union() {
         translate([-(baseWidth/20)*6, (baseWidth/20)*8, 0])
             square([(baseWidth/20)*6, (baseWidth/20)*4]);
@@ -64,12 +64,23 @@ module valve(){
         translate([-(baseWidth/20)*6, (baseWidth/20)*10, 0])
             circle(r = (baseWidth/20)*2, $fn=30);
         
-        color("red") // должно стать углублением
-        translate([-(baseWidth/20)*6, (baseWidth/20)*10, 0])
-            circle(r = (baseWidth/20)*1.5, $fn=30);
+
         
         translate([-(baseWidth/20)*3.5, (baseWidth/20)*8, 0])
             polygon(points=[[0,0],[-(baseWidth/20)*2,(baseWidth/20)*6],[(baseWidth/20)*2,(baseWidth/20)*6]]);        
+    }
+}
+
+module valve_3d(){
+    difference() {
+        linear_extrude(height = thickness, convexity=3) {
+        flat_valve();
+        }
+        color("red") // для визуализации углубления
+        translate([-(baseWidth/20)*6, (baseWidth/20)*10, thickness])
+            linear_extrude(height = thickness/2, center = true) {
+                circle(r = (baseWidth/20)*1.5, $fn=30);
+            }
     }
 }
 
@@ -101,9 +112,9 @@ module build_bange () {
             linear_extrude(height = thickness/2, convexity=3) {
                 body_rounded_corners();
             }
-            linear_extrude(height = thickness, convexity=3) {
-                valve();
-            }
+            //linear_extrude(height = thickness, convexity=3) {
+                valve_3d();
+            //}
             translate([0,0,thickness/2])
             linear_extrude(height = thickness/2, convexity=3) {
                 body_frame();
