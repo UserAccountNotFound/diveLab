@@ -1,10 +1,6 @@
 <!-- README.md (RU) -->
-<div align="left">
-  <a href="README.en.md">English</a> | Русский
-</div>
-<br>
 
-[🇷🇺 Русский](#) | [🇬🇧 English](README.en.md)
+[🇷🇺 Русский](#)  |  [🇬🇧 English](README.en.md)
 
 <a href="https://www.neva-divers.ru/">
     <img src="https://github.com/UserAccountNotFound/diveLab/blob/main/NevaDiversLogo/render/logoND_full_tech.svg" alt="Neva Divers Logo" title="Neva Divers" align="right" height="120" />
