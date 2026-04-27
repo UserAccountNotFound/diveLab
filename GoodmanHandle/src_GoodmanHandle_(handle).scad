@@ -24,7 +24,18 @@ edgeRadius          = 2;           // скругление внешних фас
 // Переключатель качества для ускорения предпросмотра
 preview_mode = true;  // true = быстрый рендер ($fn=8), false = финальное качество ($fn=30)
 
-// --- МОДУЛЬ: контур с постоянной толщиной стенки ---
+// === ПРОВЕРКИ ПАРАМЕТРОВ ===
+assert(thickness > 0, "Толщина стенки должна быть > 0");
+assert(innerCornerRadius + thickness < heightHandle, "Внутренние скругления не должны перекрывать высоту");
+assert(bottomCornerRadius >= thickness, "bottomCornerRadius должен быть ≥ thickness");
+assert(edgeRadius < min(thickness/2) , 
+       "edgeRadius не должен превышать половину толщины!");
+assert(2*edgeRadius < widthHandle, "edgeRadius не должен превышать половину ширины ручки");
+assert(cutoutSlotLength < heightHandle - (thickness + innerCornerRadius), 
+       "Длина слота превышает доступное место на прямой стенке!");
+
+
+// --- контур с постоянной толщиной стенки ---
 module flat_body() {
     // Вспомогательная функция: генерация точек дуги
     function arc_points(cx, cy, r, start_angle, end_angle, segments=20) = 
@@ -146,45 +157,12 @@ module hole() {
     }
 }
 
-module cutouts11() {
-    z_center = widthHandle/2;
-    y_pos  = heightHandle - widthHandle/2;            // центр первого вертикального слота по оси Y
-    x_pos_1  = thickness/2;                           // центр первого вертикального слота по оси X
-    x_pos_2  = thickness + widthGrip + thickness/2;   // центр второго вертикального слота по оси X
-    
-    color ("red")
-      //rotate([0, -90, 0])
-        translate([z_center, y_pos, -x_pos_1])        // !!! поебень с координатами из-за вращения
-          linear_extrude(height = thickness*2, center = true, convexity=3) {
-            hole();
-        }
-    color ("red")
-      //rotate([0, -90, 0])
-        translate([z_center, y_pos, -x_pos_2]) 
-          linear_extrude(height = thickness*2, center = true, convexity=3) {
-            hole();
-        }
-}
-
-// --- позиционирование в плоскости XY ---
-module hole_2d() {
-    y_min_straight = thickness + innerCornerRadius;
-    y_max_straight = heightHandle;
-    y_slot_center = (y_min_straight + y_max_straight - cutoutSlotLength) / 2 + cutoutSlotLength/2;
-    
-    x_pos_1 = thickness/2;  
-    x_pos_2 = thickness + widthGrip + thickness/2;  
-    
-    translate([x_pos_1, y_slot_center]) hole();
-    translate([x_pos_2, y_slot_center]) hole();
-}
-
 // --- позиционирование в плоскости YZ ---
 module hole_3d() {
     // Поворот на 90° вокруг Y: ось Z → становится осью X
     rotate([0, 90, 0])
         linear_extrude(height = thickness*2, center = true, convexity = 3)
-            hole_2d();
+            hole();
 }
 
 // --- позиционирование отверстий ----
