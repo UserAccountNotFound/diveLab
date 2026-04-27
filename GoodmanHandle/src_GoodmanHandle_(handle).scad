@@ -1,6 +1,6 @@
 // Крепление для подводного фонаря, фиксирующее его на тыльной стороне кисти
 // Goodman handle (handle)
-// vеrsion 1.0.0
+// vеrsion 1.1.0
 //
 // OpenSCAD model
 // =============================================
@@ -22,7 +22,7 @@ edgeRadius          = 2;           // скругление внешних фас
 // =================
 
 // Переключатель качества для ускорения предпросмотра
-preview_mode = true;  // true = быстрый рендер ($fn=8), false = финальное качество ($fn=30)
+preview_mode = true;  // true = быстрый рендер ($fn=8), false = нормальное качество ($fn=30)
 
 // === ПРОВЕРКИ ПАРАМЕТРОВ ===
 assert(thickness > 0, "Толщина стенки должна быть > 0");
@@ -63,8 +63,8 @@ module flat_body() {
     R_inner_in  = innerCornerRadius;                    // радиус вогнутой дуги
     R_inner_out = R_inner_in + thickness;              // сопряжённая выпуклая дуга
     
-    // Центры дуг смещены на thickness от "острого" угла выреза [thickness, thickness]
-    cx_left  = thickness + R_inner_in;   // центр вогнутой дуги (внутри материала)
+    // Центры дуг смещены на thickness от "острого" угла [thickness, thickness]
+    cx_left  = thickness + R_inner_in;   // центр вогнутой дуги
     cy_left  = thickness + R_inner_in;
     
     cx_right = (widthGrip+(thickness*2)) - thickness - R_inner_in;
@@ -74,7 +74,7 @@ module flat_body() {
     left_inner_concave  = arc_points(cx_left, cy_left, R_inner_in, 270, 180, 12);
     right_inner_concave = arc_points(cx_right, cy_right, R_inner_in, 360, 270, 12);
 
-    // --- СБОРКА КОНТУРА (строго по часовой стрелке) ---
+    // --- СБОРКА (строго по часовой стрелке) ---
     points = concat(
         // Левая внешняя стенка
         [ [0, heightHandle], [0, R_bot_out] ],
@@ -101,7 +101,7 @@ module flat_body() {
         // Правый вогнутый угол выреза
         right_inner_concave,
         
-        // Горизонталь выреза (дно "паза")
+        // Горизонталь ручки
         [ [thickness + R_inner_in, thickness] ],
         
         // Левый вогнутый угол выреза
@@ -109,22 +109,9 @@ module flat_body() {
         
         // Левая внутренняя стенка вверх
         [ [thickness, thickness + R_inner_in], [thickness, heightHandle] ]
-        // Замыкание на [0, heightHandle] происходит автоматически
     );
     
     polygon(points = points);
-}
-
-module flat_body_with_rounded_corners() {
-    if (edgeRadius > 0) {
-        minkowski() {
-            offset(r = -edgeRadius)
-                flat_body();
-            circle(r = edgeRadius, $fn=30);
-        }
-    } else {
-        flat_body();
-    }
 }
 
 module body_3d_rounded() {
@@ -152,7 +139,7 @@ module body_3d_rounded() {
 module hole() {
     hull() {
         circle(r = cutoutRadius, $fn=30);
-          translate([0, -(cutoutSlotLength - 2*cutoutRadius)])
+          translate([0, cutoutSlotLength - 2*cutoutRadius])
             circle(r = cutoutRadius, $fn=30);
     }
 }
@@ -167,23 +154,25 @@ module hole_3d() {
 
 // --- позиционирование отверстий ----
 module cutouts() {
-    y_min_straight = thickness + innerCornerRadius;
-    y_max_straight = heightHandle;
-    y_slot_center = (y_min_straight + y_max_straight - cutoutSlotLength) / 2 + cutoutSlotLength/2;
+    y_pos = heightHandle - widthHandle/2;
     
     // X: центры левой и правой стенок
     x_cut_left  = thickness/2;
     x_cut_right = (widthGrip + thickness*2) - thickness/2;
     
     // Z: центр детали по ширине
-    z_center = widthHandle / 2;
+    z_pos = widthHandle / 2;
     
     // левая 
-    translate([x_cut_left, y_slot_center, z_center])
+    color("red")
+    translate([x_cut_left, y_pos, z_pos])
+      rotate([180,0,0])
         hole_3d();
     
     // Правая
-    translate([x_cut_right, y_slot_center, z_center])
+    color("red")
+    translate([x_cut_right, y_pos, z_pos])
+      rotate([180,0,0])
         hole_3d();
 }
 
