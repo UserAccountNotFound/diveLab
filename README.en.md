@@ -1,5 +1,5 @@
 <!-- README.en.md (EN) -->
-[🇬🇧 English](README.en.md)  |  [🇷🇺 Русский](#)
+[🇬🇧 English](#)  |  [🇷🇺 Русский](README.md)
 
 
 # Work in progress
