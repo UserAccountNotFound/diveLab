@@ -1,10 +1,10 @@
-<!-- README.md (RU) -->
-
-[🇷🇺 Русский](#)  |  [🇬🇧 English](README.en.md)
-
 <a href="https://www.neva-divers.ru/">
     <img src="https://github.com/UserAccountNotFound/diveLab/blob/main/NevaDiversLogo/render/logoND_full_tech.svg" alt="Neva Divers Logo" title="Neva Divers" align="right" height="120" />
 </a>
+
+<!-- README.md (RU) -->
+
+[🇷🇺 Русский](#)  |  [🇬🇧 English](README.en.md)
 
 ![Stability](https://img.shields.io/badge/stability-work_in_progress-lightgrey?style=flat&color=ffff00) 
 ![Visitors](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FUserAccountNotFound%2FdiveLab&label=Visitors&icon=github&color=%23198754&message=&style=flat&tz=UTC) 
