@@ -6,16 +6,28 @@
     <img src="https://github.com/UserAccountNotFound/diveLab/blob/main/NevaDiversLogo/render/logoND_full_tech.svg" alt="Neva Divers Logo" title="Neva Divers" align="right" height="120" />
 </a>
 
-![Stability](https://img.shields.io/badge/stability-work_in_progress-lightgrey?style=flat&color=ffff00)
-![Visitors](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FUserAccountNotFound%2FdiveLab&label=Visitors&icon=github&color=%23198754&message=&style=flat&tz=UTC)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Stability](https://img.shields.io/badge/stability-work_in_progress-lightgrey?style=flat&color=ffff00) 
+![Visitors](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FUserAccountNotFound%2FdiveLab&label=Visitors&icon=github&color=%23198754&message=&style=flat&tz=UTC) 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
-# DiveLab Neva Divers - OpenSCAD Models <br> for Technical Diving
+# DiveLab Neva Divers - storage OpenSCAD Models <br> for Technical Diving
 
 [![OpenSCAD](https://img.shields.io/badge/OpenSCAD-007BFF?style=for-the-badge&logo=openscad&logoColor=white)](https://openscad.org/)
 
-> 📦 Параметрические 3D-модели вспомогательного оборудования для технического дайвинга, написанные на OpenSCAD.  
-
+> Библиотека параметрических 3D-моделей вспомогательного оборудования для технического, пещерного и рекреационного дайвинга, написанные на OpenSCAD:
+>
+> ***Персонифицированные маркеры направления (Arrow/Cookies/REM):***
+>
+> - ARROW: Указывают направление к ближайшему выходу, помогая найти верный путь на развилках ходового линя? 
+>
+> - COOKIES: Круглые маркеры, отмечающие место перестежки, начало перехода на другую линию 
+>
+> - REM: указывающие, что участок занят (персональный маркер)
+>
+> ***Бейджи и идентификационные элементы***
+>
+> ***Зеркала для сигнализации***
+>
 ---
 
 ## ⚠️ Предупреждение
@@ -56,3 +68,18 @@ edgeRadius           = 0.6;    // радиус 3D‑фаски рёбер, мм
 | Стенки | ≥3 периметра |
 | Постобработка | Сглаживание ацетоном (для ASA) или шлифовка |
 | Хранение | Промывка пресной водой после каждого погружения |
+
+## 🤝 Как внести вклад
+
+1. Форкните репозиторий
+2. Создайте ветку `feature/your-idea`
+3. Внесите изменения, соблюдая стиль параметризации
+4. Откройте Pull Request с описанием и скриншотами
+
+📐 Требования к коду:
+- Все размеры в миллиметрах
+- Параметры вынесены в начало файла
+- Комментарии на русском или английском
+
+
+### ***Печатай. Погружайся. Исследуй.***
