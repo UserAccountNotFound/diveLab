@@ -21,6 +21,9 @@ cutoutSlotLength    = 30;          // длина прорези (слота), м
 edgeRadius          = 2;           // скругление внешних фасок
 // =================
 
+// Переключатель качества для ускорения предпросмотра
+preview_mode = true;  // true = быстрый рендер ($fn=8), false = финальное качество ($fn=30)
+
 // --- МОДУЛЬ: контур с постоянной толщиной стенки ---
 module flat_body() {
     // Вспомогательная функция: генерация точек дуги
@@ -44,7 +47,7 @@ module flat_body() {
     right_bottom_inner = (R_bot_in > 0.1) ? 
         arc_points((widthGrip+(thickness*2)) - R_bot_out, R_bot_out, R_bot_in, 270, 360, 15) : [[(widthGrip+(thickness*2)) - R_bot_out, R_bot_out]];
 
-    // --- 2. ВНУТРЕННИЕ ВОГНУТЫЕ УГЛЫ (вырез под ручку) ---
+    // --- 2. ВНУТРЕННИЕ ВОГНУТЫЕ УГЛЫ ---
     // Здесь "внутренний" угол выреза — это вогнутая дуга
     R_inner_in  = innerCornerRadius;                    // радиус вогнутой дуги
     R_inner_out = R_inner_in + thickness;              // сопряжённая выпуклая дуга
@@ -113,6 +116,28 @@ module flat_body_with_rounded_corners() {
     }
 }
 
+module body_3d_rounded() {
+    sphere_fn = preview_mode ? 8 : 30;  // оптимизация для скорости (бук старенький)
+    
+    if (edgeRadius > 0) {
+        minkowski() {
+            // Компенсация «раздувания» от minkowski:
+            // - 2D-контур уменьшаем на edgeRadius
+            // - высота выдавливания уменьшается на 2*edgeRadius
+            linear_extrude(height = widthHandle - 2*edgeRadius, convexity = 3)
+                offset(r = -edgeRadius) flat_body();
+            
+            // Сфера скругляет рёбра во всех плоскостях (XY, YZ, XZ)
+            sphere(r = edgeRadius, $fn = sphere_fn);
+        }
+    } else {
+        // Без скругления — обычное выдавливание
+        linear_extrude(height = widthHandle, convexity = 3)
+            flat_body();
+    }
+}
+
+// --- Отверстия ---
 module hole() {
     hull() {
         circle(r = cutoutRadius, $fn=30);
@@ -121,35 +146,75 @@ module hole() {
     }
 }
 
-// --- Размещение отверстий/углублений/прорезей ---
-module cutouts() {
+module cutouts11() {
     z_center = widthHandle/2;
     y_pos  = heightHandle - widthHandle/2;            // центр первого вертикального слота по оси Y
     x_pos_1  = thickness/2;                           // центр первого вертикального слота по оси X
     x_pos_2  = thickness + widthGrip + thickness/2;   // центр второго вертикального слота по оси X
     
     color ("red")
-      rotate([0, -90, 0])
+      //rotate([0, -90, 0])
         translate([z_center, y_pos, -x_pos_1])        // !!! поебень с координатами из-за вращения
           linear_extrude(height = thickness*2, center = true, convexity=3) {
             hole();
         }
     color ("red")
-      rotate([0, -90, 0])
+      //rotate([0, -90, 0])
         translate([z_center, y_pos, -x_pos_2]) 
           linear_extrude(height = thickness*2, center = true, convexity=3) {
             hole();
         }
 }
 
+// --- позиционирование в плоскости XY ---
+module hole_2d() {
+    y_min_straight = thickness + innerCornerRadius;
+    y_max_straight = heightHandle;
+    y_slot_center = (y_min_straight + y_max_straight - cutoutSlotLength) / 2 + cutoutSlotLength/2;
+    
+    x_pos_1 = thickness/2;  
+    x_pos_2 = thickness + widthGrip + thickness/2;  
+    
+    translate([x_pos_1, y_slot_center]) hole();
+    translate([x_pos_2, y_slot_center]) hole();
+}
+
+// --- позиционирование в плоскости YZ ---
+module hole_3d() {
+    // Поворот на 90° вокруг Y: ось Z → становится осью X
+    rotate([0, 90, 0])
+        linear_extrude(height = thickness*2, center = true, convexity = 3)
+            hole_2d();
+}
+
+// --- позиционирование отверстий ----
+module cutouts() {
+    y_min_straight = thickness + innerCornerRadius;
+    y_max_straight = heightHandle;
+    y_slot_center = (y_min_straight + y_max_straight - cutoutSlotLength) / 2 + cutoutSlotLength/2;
+    
+    // X: центры левой и правой стенок
+    x_cut_left  = thickness/2;
+    x_cut_right = (widthGrip + thickness*2) - thickness/2;
+    
+    // Z: центр детали по ширине
+    z_center = widthHandle / 2;
+    
+    // левая 
+    translate([x_cut_left, y_slot_center, z_center])
+        hole_3d();
+    
+    // Правая
+    translate([x_cut_right, y_slot_center, z_center])
+        hole_3d();
+}
+
 // --- СБОРКА ---
 module build_detail () {
     union() {
         difference() {
-            linear_extrude(height = widthHandle, convexity=3) {
-                flat_body_with_rounded_corners();
-            }    
-                cutouts();
+            body_3d_rounded();          
+            cutouts();
         }
     }
 }
