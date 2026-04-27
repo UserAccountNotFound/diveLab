@@ -10,9 +10,9 @@
 ![Visitors](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FUserAccountNotFound%2FdiveLab&label=Visitors&icon=github&color=%23198754&message=&style=flat&tz=UTC) 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
-# DiveLab Neva Divers - storage OpenSCAD Models <br> for Technical Diving
-
 [![OpenSCAD](https://img.shields.io/badge/OpenSCAD-007BFF?style=for-the-badge&logo=openscad&logoColor=white)](https://openscad.org/)
+
+# DiveLab Neva Divers - storage OpenSCAD Models <br> for Technical Diving
 
 > Библиотека параметрических 3D-моделей вспомогательного оборудования для технического, пещерного и рекреационного дайвинга, написанные на OpenSCAD:
 >
