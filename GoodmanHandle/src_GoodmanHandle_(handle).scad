@@ -161,7 +161,7 @@ module cutouts() {
     x_cut_right = (widthGrip + thickness*2) - thickness/2;
     
     // Z: центр детали по ширине
-    z_pos = widthHandle / 2;
+    z_pos = (widthHandle-edgeRadius*2) / 2;
     
     // левая 
     color("red")
@@ -179,10 +179,10 @@ module cutouts() {
 // --- СБОРКА ---
 module build_detail () {
     union() {
-        difference() {
+        //difference() {
             body_3d_rounded();          
             cutouts();
-        }
+        //}
     }
 }
 
