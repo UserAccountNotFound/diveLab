@@ -60,13 +60,13 @@ Press F5 → preview, F6 → render, F7 → export to .stl
 
 ### 3. 3D Printing
 
-| Parameter       | Recommendation                         |
-|-----------------|----------------------------------------|
-| Material        | PETG, ASA, Nylon, Carbon-filled PETG   |
-| Infill          | ≥40% (for load-bearing elements ≥60%)  |
-| Walls           | ≥3 perimeters                          |
-| Post-processing | Acetone smoothing (for ASA) or sanding |
-| Storage         | Rinse with fresh water after each dive |
+| Parameter       | Recommendation                                 |
+|-----------------|------------------------------------------------|
+| Material        | PETG, ASA, Nylon, Carbon-filled PETG           |
+| Infill          | ≥40% (for load-bearing elements ≥60%)          |
+| Walls           | ≥3 perimeters                                  |
+| Post-processing | Dichloromethane smoothing (for ASA) or sanding |
+| Storage         | Rinse with fresh water after each dive         |
 
 ## 🤝 How to Contribute
 
