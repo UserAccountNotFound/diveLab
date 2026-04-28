@@ -6,8 +6,8 @@
 // =============================================
 use <../NevaDiversLogo/logoND_small.scad>
 
-// === ПАРАМЕТРЫ ===
-widthGrip           = 100;         // ширина хвата ручки (ширина внутренней части), мм
+// === Глобальные ПАРАМЕТРЫ ===
+lengthGrip           = 110;         // ширина хвата ручки (ширина внутренней части), мм
 heightHandle        = 70;          // высота самой ручки (включая толщину детали), мм
 widthHandle         = 20;          // ширина самой ручки, мм
 thickness           = 5;           // толщина стенки ручки, мм
@@ -21,8 +21,10 @@ cutoutSlotLength    = 30;          // длина прорези (слота), м
 edgeRadius          = thickness*0.49;           // скругление внешних фасок
 // =================
 
+// --- Локальные Параметры ---
+
 // Переключатель качества для ускорения предпросмотра
-preview_mode = false;  // true = быстрый рендер ($fn=8), false = нормальное качество ($fn=30)
+preview_mode = true;  // true = быстрый рендер ($fn=8), false = нормальное качество ($fn=30)
 
 // === ПРОВЕРКИ ПАРАМЕТРОВ ===
 assert(thickness > 0, "Толщина стенки должна быть > 0");
@@ -53,13 +55,13 @@ module flat_body() {
     R_bot_in  = max(0, R_bot_out - thickness); // внутренняя дуга (если >0)
     
     left_bottom_outer  = arc_points(R_bot_out, R_bot_out, R_bot_out, 180, 270, 15);
-    right_bottom_outer = arc_points((widthGrip+(thickness*2)) - R_bot_out, R_bot_out, R_bot_out, 270, 360, 15);
+    right_bottom_outer = arc_points((lengthGrip+(thickness*2)) - R_bot_out, R_bot_out, R_bot_out, 270, 360, 15);
     
     // Внутренние дуги (только если радиус положительный)
     left_bottom_inner  = (R_bot_in > 0.1) ? 
         arc_points(R_bot_out, R_bot_out, R_bot_in, 180, 270, 15) : [[R_bot_out, R_bot_out]];
     right_bottom_inner = (R_bot_in > 0.1) ? 
-        arc_points((widthGrip+(thickness*2)) - R_bot_out, R_bot_out, R_bot_in, 270, 360, 15) : [[(widthGrip+(thickness*2)) - R_bot_out, R_bot_out]];
+        arc_points((lengthGrip+(thickness*2)) - R_bot_out, R_bot_out, R_bot_in, 270, 360, 15) : [[(lengthGrip+(thickness*2)) - R_bot_out, R_bot_out]];
 
     // --- 2. ВНУТРЕННИЕ ВОГНУТЫЕ УГЛЫ ---
     // Здесь "внутренний" угол выреза — это вогнутая дуга
@@ -70,7 +72,7 @@ module flat_body() {
     cx_left  = thickness + R_inner_in;   // центр вогнутой дуги
     cy_left  = thickness + R_inner_in;
     
-    cx_right = (widthGrip+(thickness*2)) - thickness - R_inner_in;
+    cx_right = (lengthGrip+(thickness*2)) - thickness - R_inner_in;
     cy_right = thickness + R_inner_in;
     
     // Вогнутые дуги (обход ПО часовой: углы убывают)
@@ -86,20 +88,20 @@ module flat_body() {
         left_bottom_outer,
         
         // Прямой низ
-        [ [(widthGrip+(thickness*2)) - R_bot_out, 0] ],
+        [ [(lengthGrip+(thickness*2)) - R_bot_out, 0] ],
         
         // Правый нижний внешний угол
         right_bottom_outer,
         
         // Правая внешняя стенка
-        [ [(widthGrip+(thickness*2)), R_bot_out], [(widthGrip+(thickness*2)), heightHandle] ],
+        [ [(lengthGrip+(thickness*2)), R_bot_out], [(lengthGrip+(thickness*2)), heightHandle] ],
         
         // Верхняя кромка до выреза
-        [ [(widthGrip+(thickness*2)) - thickness, heightHandle] ],
+        [ [(lengthGrip+(thickness*2)) - thickness, heightHandle] ],
         
         // Правая внутренняя стенка вниз до начала вогнутого скругления
-        [ [(widthGrip+(thickness*2)) - thickness, heightHandle], 
-          [(widthGrip+(thickness*2)) - thickness, thickness + R_inner_in] ],
+        [ [(lengthGrip+(thickness*2)) - thickness, heightHandle], 
+          [(lengthGrip+(thickness*2)) - thickness, thickness + R_inner_in] ],
         
         // Правый вогнутый угол выреза
         right_inner_concave,
@@ -161,7 +163,7 @@ module cutouts() {
     
     // X: центры левой и правой стенок
     x_cut_left  = thickness/2;
-    x_cut_right = (widthGrip + thickness*2) - thickness/2;
+    x_cut_right = (lengthGrip + thickness*2) - thickness/2;
     
     // Z: центр детали по ширине
     z_pos = (widthHandle-edgeRadius*2) / 2;
@@ -177,6 +179,11 @@ module cutouts() {
     translate([x_cut_right, y_pos, z_pos])
       rotate([180,0,0])
         hole_3d();
+}
+
+// направляющие
+module rails () {
+
 }
 
 // --- СБОРКА ---
