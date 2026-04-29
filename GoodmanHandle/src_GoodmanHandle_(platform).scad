@@ -25,19 +25,51 @@ lengthDetail    = lengthGrip;
 widthRails      = (widthHandle/2 - edgeRadius - cutoutRadius)/3;
 
 
-
-module flat_body() {
+module base_body() {
     polygon(points = [
-        [0,                             0],
-        [0,                             edgeRadius + widthRails],
-        [widthRails,                    edgeRadius + widthRails],
-        [widthRails,                    edgeRadius + widthRails*2],
-        [0,                             edgeRadius + widthRails*2],
-        [0,                             widthDetail - (edgeRadius+widthRails*2)],
-        [widthRails,                    widthDetail - (edgeRadius+widthRails*2)],
-        [widthRails,                    widthDetail - (edgeRadius+widthRails)],
-        [0,                             widthDetail - (edgeRadius+widthRails)],
-        [0,                             widthDetail],
+        [0,            0],
+        [0,            widthDetail],
+        [lengthDetail, widthDetail],
+        [lengthDetail, 0]
+    ]);
+}
+
+module base_body_3d_rounded() {
+    sphere_fn = preview_mode ? 8 : 30;  // оптимизация для скорости (бук старенький)
+    
+    if (edgeRadius > 0) {
+        minkowski() {
+            // Компенсация «раздувания» от minkowski:
+            // - 2D-контур уменьшаем на edgeRadius
+            // - высота выдавливания уменьшается на 2*edgeRadius
+            linear_extrude(height = thickness - 2*edgeRadius, convexity = 3)
+                offset(r = -edgeRadius) base_body();
+            
+            // Сфера скругляет рёбра во всех плоскостях (XY, YZ, XZ)
+            sphere(r = edgeRadius, $fn = sphere_fn);
+        }
+    } else {
+        // Без скругления — обычное выдавливание
+        linear_extrude(height = thickness, convexity = 3)
+            base_body();
+    }
+}
+
+module connecting_surface() {
+    polygon(points = [
+        [0,             0],
+        [0,             edgeRadius + widthRails],
+        [widthRails,    edgeRadius + widthRails],
+        [widthRails,    edgeRadius + widthRails*2],
+        [0,             edgeRadius + widthRails*2],
+        [0,             widthDetail - (edgeRadius+widthRails*2)],
+        [widthRails,    widthDetail - (edgeRadius+widthRails*2)],
+        [widthRails,    widthDetail - (edgeRadius+widthRails)],
+        [0,             widthDetail - (edgeRadius+widthRails)],
+        [0,             widthDetail],
+       [widthDetail,   widthDetail/2],
+
+        [(lengthDetail - widthDetail), widthDetail/2],
         [lengthDetail,                  widthDetail],
         [lengthDetail,                  widthDetail - (edgeRadius+widthRails)],
         [lengthDetail - widthRails,     widthDetail - (edgeRadius+widthRails)],
@@ -47,34 +79,32 @@ module flat_body() {
         [lengthDetail - widthRails,     edgeRadius+widthRails*2],
         [lengthDetail - widthRails,     edgeRadius+widthRails],
         [lengthDetail,                  edgeRadius + widthRails],
-        [lengthDetail, 0]
+        [lengthDetail, 0],
+        [(lengthDetail - widthDetail), widthDetail/2],
+       [widthDetail,   widthDetail/2] 
     ]);
 }
 
-module body_3d_rounded() {
-    sphere_fn = preview_mode ? 8 : 30;  // оптимизация для скорости (бук старенький)
-    
+module rounding_corners() {
     if (edgeRadius > 0) {
         minkowski() {
-            // Компенсация «раздувания» от minkowski:
-            // - 2D-контур уменьшаем на edgeRadius
-            // - высота выдавливания уменьшается на 2*edgeRadius
-            linear_extrude(height = thickness - 2*edgeRadius, convexity = 3)
-                offset(r = -edgeRadius) flat_body();
-            
-            // Сфера скругляет рёбра во всех плоскостях (XY, YZ, XZ)
-            sphere(r = edgeRadius, $fn = sphere_fn);
+            offset(r = -edgeRadius)
+                base_body();
+            circle(r = edgeRadius, $fn=30);
         }
     } else {
-        // Без скругления — обычное выдавливание
-        linear_extrude(height = widthHandle, convexity = 3)
-            flat_body();
+        base_body();
     }
 }
+
 // --- СБОРКА ---
 module build_detail () {
     union() {
-        body_3d_rounded();
+        difference() {
+            //base_body_3d_rounded();
+            linear_extrude(height = thickness, convexity = 3, center = true)
+              connecting_surface();
+        }
     }
 }
 
