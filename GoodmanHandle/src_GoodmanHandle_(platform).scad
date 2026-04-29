@@ -1,6 +1,6 @@
 // Крепление для подводного фонаря, фиксирующее его на тыльной стороне кисти
 // Goodman handle (platform)
-// vеrsion 0.2.0
+// vеrsion 0.2.1
 //
 // OpenSCAD model
 // =============================================
@@ -43,19 +43,19 @@ module body_rounding() {
 
 module rails() {
     color ("magenta")
-    translate([0,edgeRadius + widthRails,0])
+    translate([widthRails/2,edgeRadius + widthRails,0])
     cube ([widthRails,widthRails,thickness*2], center=true);
     
     color ("magenta")
-    translate([0,(widthDetail-(edgeRadius+widthRails)),0])
+    translate([widthRails/2,(widthDetail-(edgeRadius+widthRails)),0])
     cube ([widthRails,widthRails,thickness*2], center=true);
 
     color ("magenta")
-    translate([lengthDetail,edgeRadius + widthRails,0])
+    translate([(lengthDetail-widthRails/2),edgeRadius + widthRails,0])
     cube ([widthRails,widthRails,thickness*2], center=true);
     
     color ("magenta")
-    translate([lengthDetail,(widthDetail-(edgeRadius+widthRails)),0])
+    translate([(lengthDetail-widthRails/2),(widthDetail-(edgeRadius+widthRails)),0])
     cube ([widthRails,widthRails,thickness*2], center=true);
 }
 
