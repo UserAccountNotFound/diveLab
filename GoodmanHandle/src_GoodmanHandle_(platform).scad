@@ -1,6 +1,6 @@
 // Крепление для подводного фонаря, фиксирующее его на тыльной стороне кисти
 // Goodman handle (platform)
-// vеrsion 0.2.1
+// vеrsion 0.2.2
 //
 // OpenSCAD model
 // =============================================
@@ -11,7 +11,6 @@ lengthGrip          = 110;         // ширина хвата ручки (шир
 widthHandle         = 20;          // ширина площадки, мм
 thickness           = 5;           // толщина площадки, мм
 hole                = 5.0;  // диаметр отверстий для резинки
-
 
 cutoutSlotLength    = 30;          // длина прорези (слота), мм
 
@@ -42,21 +41,22 @@ module body_rounding() {
 }
 
 module rails() {
-    color ("magenta")
-    translate([widthRails/2,edgeRadius + widthRails,0])
-    cube ([widthRails,widthRails,thickness*2], center=true);
+    color ("red")
+    //translate([0,edgeRadius + widthRails,0])
+    translate([0,(widthDetail/2-widthRails*3),0])
+    cube ([widthRails*2,widthRails,thickness*2], center=true);
     
-    color ("magenta")
-    translate([widthRails/2,(widthDetail-(edgeRadius+widthRails)),0])
-    cube ([widthRails,widthRails,thickness*2], center=true);
+    color ("red")
+    translate([0,(widthDetail/2+widthRails*3),0])
+    cube ([widthRails*2,widthRails,thickness*2], center=true);
 
-    color ("magenta")
-    translate([(lengthDetail-widthRails/2),edgeRadius + widthRails,0])
-    cube ([widthRails,widthRails,thickness*2], center=true);
+    color ("red")
+    translate([lengthDetail,(widthDetail/2-widthRails*3),0])
+    cube ([widthRails*2,widthRails,thickness*2], center=true);
     
-    color ("magenta")
-    translate([(lengthDetail-widthRails/2),(widthDetail-(edgeRadius+widthRails)),0])
-    cube ([widthRails,widthRails,thickness*2], center=true);
+    color ("red")
+    translate([lengthDetail,(widthDetail/2+widthRails*3),0])
+    cube ([widthRails*2,widthRails,thickness*2], center=true);
 }
 
 module circle_hole() {
@@ -65,23 +65,23 @@ module circle_hole() {
     }
 }
 module cutouts() {
-    color ("magenta")
+    color ("red")
     translate([lengthDetail/3, widthDetail/3])
         linear_extrude(height = thickness*2, center = true) {
           circle_hole();
         }
 
-    color ("magenta")
+    color ("red")
     translate([lengthDetail/3, (widthDetail/3)*2])
         linear_extrude(height = thickness*2, center = true) {
           circle_hole();
         }
-    color ("magenta")
+    color ("red")
     translate([(lengthDetail/3)*2, widthDetail/3])
         linear_extrude(height = thickness*2, center = true) {
           circle_hole();
         }
-    color ("magenta")
+    color ("red")
     translate([(lengthDetail/3)*2, (widthDetail/3)*2])
         linear_extrude(height = thickness*2, center = true) {
           circle_hole();
@@ -89,7 +89,7 @@ module cutouts() {
 }
 
 // --- СБОРКА ---
-module build_detail () {
+module build_PLATFORM_from_GoodmanHandle() {
     union() {
         difference() {
             body_rounding();
@@ -99,4 +99,4 @@ module build_detail () {
     }
 }
 
-build_detail();
+build_PLATFORM_from_GoodmanHandle();

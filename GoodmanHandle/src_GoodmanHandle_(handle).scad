@@ -1,11 +1,11 @@
 // Крепление для подводного фонаря, фиксирующее его на тыльной стороне кисти
 // Goodman handle (handle) + GoPro mount
-// vеrsion 1.2.0
+// vеrsion 1.2.1
 //
 // OpenSCAD model
 // =============================================
 use <../NevaDiversLogo/logoND_small.scad>
-use <src_GoodmanHandle_(GoPro_mount).scad>
+use <src_GoPro_mount.scad>
 
 // === Глобальные ПАРАМЕТРЫ ===
 lengthGrip           = 110;         // ширина хвата ручки (ширина внутренней части), мм
@@ -26,6 +26,10 @@ edgeRadius          = thickness*0.49;           // скругление внеш
 // =================
 
 // --- Локальные Параметры ---
+
+widthRails          = (widthHandle/2 - edgeRadius - cutoutRadius)/3;
+widthDetail         = widthHandle;
+lengthDetail        = lengthGrip;
 
 // Переключатель качества для ускорения предпросмотра
 preview_mode = true;  // true = быстрый рендер ($fn=8), false = нормальное качество ($fn=30)
@@ -187,11 +191,28 @@ module cutouts() {
 
 // направляющие
 module rails () {
+    center_y_pos = heightHandle-widthHandle/2 - cutoutSlotLength/2+cutoutRadius;
+    right_x_pos = lengthGrip + thickness;
+    
+    color ("magenta")
+    translate([thickness,center_y_pos,((widthHandle-edgeRadius*2)/2-widthRails*3)])
+    cube ([widthRails*2,(cutoutSlotLength+cutoutRadius),widthRails], center=true);
+    
+    color ("magenta")
+    translate([thickness,center_y_pos,((widthHandle-edgeRadius*2)/2+widthRails*3)])
+    cube ([widthRails*2,(cutoutSlotLength+cutoutRadius),widthRails], center=true);
 
+    color ("magenta")
+    translate([right_x_pos,center_y_pos,((widthHandle-edgeRadius*2)/2-widthRails*3)])
+    cube ([widthRails*2,(cutoutSlotLength+cutoutRadius),widthRails], center=true);
+    
+    color ("magenta")
+    translate([right_x_pos,center_y_pos,((widthHandle-edgeRadius*2)/2+widthRails*3)])
+    cube ([widthRails*2,(cutoutSlotLength+cutoutRadius),widthRails], center=true);
 }
 
 // --- СБОРКА ---
-module build_detail () {
+module build_HANDLE_from_GoodmanHandle () {
     // Z: центр детали по ширине
     z_pos = (widthHandle-edgeRadius*2) / 2;
     y_pos = heightHandle+heightGoProMount/3;
@@ -201,11 +222,13 @@ module build_detail () {
             body_3d_rounded();          
             cutouts();
         }
-        //rotate([90,0,0])
-          translate([0, y_pos, z_pos])
+        rails();
+        
+        translate([0, y_pos, z_pos])
+          rotate([180,0,0])         // на подумать!!! как будет лучше
             mount_GoPro_build();
     }
 }
 
-build_detail();
+build_HANDLE_from_GoodmanHandle();
 //flat_body();
