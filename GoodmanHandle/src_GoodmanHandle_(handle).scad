@@ -1,16 +1,19 @@
 // Крепление для подводного фонаря, фиксирующее его на тыльной стороне кисти
-// Goodman handle (handle)
-// vеrsion 1.1.0
+// Goodman handle (handle) + GoPro mount
+// vеrsion 1.2.0
 //
 // OpenSCAD model
 // =============================================
 use <../NevaDiversLogo/logoND_small.scad>
+use <src_GoodmanHandle_(GoPro_mount).scad>
 
 // === Глобальные ПАРАМЕТРЫ ===
 lengthGrip           = 110;         // ширина хвата ручки (ширина внутренней части), мм
 heightHandle        = 70;          // высота самой ручки (включая толщину детали), мм
 widthHandle         = 20;          // ширина самой ручки, мм
 thickness           = 5;           // толщина стенки ручки, мм
+
+heightGoProMount    = 18;
 
 innerCornerRadius   = 10.0;        // радиус ВНУТРЕННИХ (вогнутых) углов выреза, мм
 bottomCornerRadius  = 15.0;        // радиус НИЖНИХ внешних углов, мм
@@ -19,6 +22,7 @@ cutoutRadius        = 2.0;         // радиус круглых вырезов
 cutoutSlotLength    = 30;          // длина прорези (слота), мм
 
 edgeRadius          = thickness*0.49;           // скругление внешних фасок
+
 // =================
 
 // --- Локальные Параметры ---
@@ -82,7 +86,7 @@ module flat_body() {
     // --- СБОРКА (строго по часовой стрелке) ---
     points = concat(
         // Левая внешняя стенка
-        [ [0, heightHandle], [0, R_bot_out] ],
+        [ [0, heightHandle+heightGoProMount], [0, R_bot_out] ],
         
         // Левый нижний внешний угол
         left_bottom_outer,
@@ -113,7 +117,7 @@ module flat_body() {
         left_inner_concave,
         
         // Левая внутренняя стенка вверх
-        [ [thickness, thickness + R_inner_in], [thickness, heightHandle] ]
+        [ [thickness, thickness + R_inner_in], [thickness, heightHandle+heightGoProMount] ]
     );
     
     polygon(points = points);
@@ -188,12 +192,20 @@ module rails () {
 
 // --- СБОРКА ---
 module build_detail () {
+    // Z: центр детали по ширине
+    z_pos = (widthHandle-edgeRadius*2) / 2;
+    y_pos = heightHandle+heightGoProMount/3;
+    
     union() {
         difference() {
             body_3d_rounded();          
             cutouts();
         }
+        //rotate([90,0,0])
+          translate([0, y_pos, z_pos])
+            mount_GoPro_build();
     }
 }
 
 build_detail();
+//flat_body();
